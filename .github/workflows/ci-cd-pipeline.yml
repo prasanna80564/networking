@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  
+      - main  # Trigger on push to the main branch
 
 jobs:
   build_and_deploy:
@@ -37,5 +37,5 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@18.201.238.100 << 'EOF'
         docker pull prasanna2703/sample-app:latest
-        docker run -d -p 3000:3000 prasanna2703/sample-app:latest
+        docker run -d -p 80:80 prasanna2703/sample-app:latest
         EOF
