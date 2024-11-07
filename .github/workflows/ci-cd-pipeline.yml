@@ -2,15 +2,15 @@ deploy:
   runs-on: ubuntu-latest
   needs: build_and_push  # Ensure deployment runs after the image is pushed
 
-  steps:
+steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: SSH to EC2 and deploy
-      env:
+ env:
         SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      run: |
+ run: |
         # Write the SSH private key to a file
         echo "$SSH_PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
@@ -22,57 +22,18 @@ deploy:
         # SSH into EC2 and deploy the Docker container
         ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@18.201.238.100 << 'EOF'
           # Debugging: Check Docker version to ensure it's installed
-          docker --version
-          
+          docker --version || { echo "Docker is not installed"; exit 1; }
+
           # Pull the latest Docker image
-          docker pull $DOCKER_USERNAME/sample-app:latest
-          
+          docker pull $DOCKER_USERNAME/sample-app:latest || { echo "Failed to pull Docker image"; exit 1; }
+
           # Stop the existing container if running
           docker stop sample-app || true
           docker rm sample-app || true
-          
+
           # Run the new container
-          docker run -d --name sample-app -p 80:80 $DOCKER_USERNAME/sample-app:latest
-          
+          docker run -d --name sample-app -p 80:80 $DOCKER_USERNAME/sample-app:latest || { echo "Failed to start Docker container"; exit 1; }
+
           # Debugging: Check running Docker containers
-          docker ps -a
-        EOF
-deploy:
-  runs-on: ubuntu-latest
-  needs: build_and_push  # Ensure deployment runs after the image is pushed
-
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: SSH to EC2 and deploy
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      run: |
-        # Write the SSH private key to a file
-        echo "$SSH_PRIVATE_KEY" > private_key.pem
-        chmod 600 private_key.pem
-
-        # Debugging: Check private key file and permissions
-        ls -l private_key.pem
-        cat private_key.pem
-
-        # SSH into EC2 and deploy the Docker container
-        ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@18.201.238.100 << 'EOF'
-          # Debugging: Check Docker version to ensure it's installed
-          docker --version
-          
-          # Pull the latest Docker image
-          docker pull $DOCKER_USERNAME/sample-app:latest
-          
-          # Stop the existing container if running
-          docker stop sample-app || true
-          docker rm sample-app || true
-          
-          # Run the new container
-          docker run -d --name sample-app -p 80:80 $DOCKER_USERNAME/sample-app:latest
-          
-          # Debugging: Check running Docker containers
-          docker ps -a
-        EOF
+          docker ps -a || { echo "Failed to list Docker containers"; exit 1; }
+    EOF
