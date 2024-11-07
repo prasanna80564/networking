@@ -1,0 +1,39 @@
+name: CI/CD Pipeline for Docker
+
+on:
+  push:
+    branches:
+      - main  # Trigger this workflow on push to the 'main' branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Run on an Ubuntu virtual machine
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Step 2: Set up Docker Buildx (for multi-platform support)
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    # Step 3: Log in to Docker Hub
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    # Step 4: Build the Docker image and push it to Docker Hub
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: true
+        tags: prasanna80564/sample-app:latest
+
+    # Step 5: Deploy to EC2 (make sure the EC2 instance is set up to accept SSH connections)
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no -i /path/to/your/private-key.pem ubuntu@your-ec2-ip 'docker pull prasanna80564/sample-app:latest && docker run -d -p 3000:3000 prasanna80564/sample-app:latest'
