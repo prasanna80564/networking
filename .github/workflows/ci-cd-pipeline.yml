@@ -24,7 +24,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t prasanna2703/sample-app:latest .
+        docker build -t prasanna2703/sample-app:latest -f docker_files/Dockerfile .
 
     - name: Push Docker image to Docker Hub
       run: |
