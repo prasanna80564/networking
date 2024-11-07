@@ -1,17 +1,8 @@
-# Use an official Node.js runtime as a parent image
-FROM node:16
+# Use the official Nginx image as the base image
+FROM nginx:alpine
 
-# Set the working directory in the container
-WORKDIR /usr/src/app
+# Copy the content of your project directory (e.g., index.html, CSS, JS) to the Nginx server directory
+COPY . /usr/share/nginx/html
 
-# Copy the current directory contents into the container at /usr/src/app
-COPY . .
-
-# Install any needed dependencies
-RUN npm install
-
-# Make your app available on port 3000
-EXPOSE 3000
-
-# Define the command to run your app
-CMD [ "npm", "start" ]
+# Expose port 80 so the app can be accessed via HTTP
+EXPOSE 80
