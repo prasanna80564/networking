@@ -3,12 +3,12 @@ Automated Container deployment and Administration in the cloud
 This project automates the deployment of a web application using terraform,ansible,docker and github actions. The goal is to set up the EC2 instance on aws, configure with docker and deploy a simple web application inside a docker container, then the process is fully automated through the CI/CD pipe line.  
 
 project structure:
-main.tf--> terraform configuration 
-setup.yml--> configure EC2 instance 
-inventory.ini--> files constain the EC2 instance details
-ci-cd-pipeline.yml--> github action pipline configuration file 
-dockerfile--> to build the container for the simple web page 
-index.html--> the simple web page file 
+main.tf- terraform configuration 
+setup.yml-configure EC2 instance 
+inventory.ini-files constain the EC2 instance details
+ci-cd-pipeline.yml- github action pipline configuration file 
+dockerfile- to build the container for the simple web page 
+index.html-the simple web page file 
 
 Prerequisites:
 1.aws account 
@@ -19,13 +19,13 @@ Prerequisites:
 
 setup infrastructure:
 1.terraform setup 
--->install terraform 
--->run the following command in the vs code terminal to provision your ec2 instance 
+-install terraform 
+-run the following command in the vs code terminal to provision your ec2 instance 
 
 commands: 
 aws configure ## (enter your access key and secret key)
-terraform init 
-terraform apply 
+-terraform init 
+-terraform apply 
 
 after running the terraform script will get the EC2 instance ip address in the terminal 
 
@@ -50,16 +50,16 @@ this CI/CD is configured to automatically build and push docker image in the doc
 whenever the changes are pushed to the main branch .
 
 1. build_and_push:
-   -->Automatically builds a Docker image from the Dockerfile.
-   -->Tags the image with your Docker Hub username and latest tag.
-   --> Pushes the image to Docker Hub.
+   -Automatically builds a Docker image from the Dockerfile.
+   -Tags the image with your Docker Hub username and latest tag.
+   - Pushes the image to Docker Hub.
 2. deploy:
-   -->Deploys the Docker container to the EC2 instance after the image is pushed.
-   -->The EC2 instance pulls the latest Docker image, stops any existing container, and runs the new container.
+   -Deploys the Docker container to the EC2 instance after the image is pushed.
+   -The EC2 instance pulls the latest Docker image, stops any existing container, and runs the new container.
 
 4.docker setup 
--->the Dockerfile builds the docker container using the ngnix image.
--->it pulls the index.html file to the ngnix directory and runs in port 80 so that the application can be accessed via HTTP.
+-the Dockerfile builds the docker container using the ngnix image.
+-it pulls the index.html file to the ngnix directory and runs in port 80 so that the application can be accessed via HTTP.
 
 The build and deployment of the Docker container are fully automated in the CI/CD pipeline. You do not need to manually run docker build or docker run.
 
@@ -70,12 +70,12 @@ The build and deployment of the Docker container are fully automated in the CI/C
 
  to find the EC2 instance ip, yu can go back to the terraform insatance output 
 
- -->instance_ip = <public_ip>
+ -instance_ip = <public_ip>
 
  Configuration Details
--->AWS Region: eu-west-1
--->EC2 Instance Type: t2.micro
--->Security Group: Configured to allow SSH (port 22) and HTTP (port 80) traffic.
+-AWS Region: eu-west-1
+-EC2 Instance Type: t2.micro
+-Security Group: Configured to allow SSH (port 22) and HTTP (port 80) traffic.
 
  
 
