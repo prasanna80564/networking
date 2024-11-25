@@ -1,16 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple Web App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sum of Multiples</title>
 </head>
 <body>
-  <h1>Welcome to NETWORKING PROJECT </h1>
-  <h2>hello world</h2>
-  <p>This is a basic static web page served by Docker!</p>
-  <p>networking automation project ca1 </p>
-  <p>CI/CD PIPELINE IS SUCESSFULL</p>
-  <p>hello world</p>
+    <h2>Sum of Multiples Calculator</h2>
+
+    <label for="listA">Enter list a (comma separated):</label>
+    <input type="text" id="listA" placeholder="e.g., 2, 3, 5"><br><br>
+
+    <label for="listL">Enter list l (comma separated):</label>
+    <input type="text" id="listL" placeholder="e.g., 6, 15, 30, 11"><br><br>
+
+    <button onclick="calculateSum()">Calculate Sum</button>
+
+    <h3>Result:</h3>
+    <p id="result"></p>
+
+    <script>
+        function calculateSum() {
+           
+            let a = document.getElementById('listA').value.split(',').map(Number);
+            let l = document.getElementById('listL').value.split(',').map(Number);
+
+            let totalSum = 0;
+
+            
+            for (let num of l) {
+                for (let divisor of a) {
+                    if (num % divisor === 0) {
+                        totalSum += num;
+                        break;  
+                    }
+                }
+            }
+
+           
+            document.getElementById('result').textContent = 'Sum of multiples: ' + totalSum;
+        }
+    </script>
 </body>
 </html>
